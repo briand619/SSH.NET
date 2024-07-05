@@ -71,7 +71,7 @@ namespace Renci.SshNet.Tests.Classes.Sftp
         {
             _sequence = new MockSequence();
             SftpSessionMock.InSequence(_sequence)
-                           .Setup(p => p.RequestOpen(_path, Flags.Read | Flags.Write, false))
+                           .Setup(p => p.RequestOpen(_path, Flags.Read | Flags.Write, false, null))
                            .Returns(_handle);
             SftpSessionMock.InSequence(_sequence)
                            .Setup(p => p.CalculateOptimalReadLength(_bufferSize))

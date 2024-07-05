@@ -149,10 +149,11 @@ namespace Renci.SshNet.Sftp
         /// <param name="path">The path.</param>
         /// <param name="flags">The flags.</param>
         /// <param name="nullOnError">If set to <see langword="true"/>, <see langword="null"/> is returned in case of an error.</param>
+        /// <param name="sftpFileAttributes">If set, file attributes to set on file open.</param>
         /// <returns>
         /// The file handle for the specified path.
         /// </returns>
-        byte[] RequestOpen(string path, Flags flags, bool nullOnError = false);
+        byte[] RequestOpen(string path, Flags flags, bool nullOnError = false, SftpFileAttributes sftpFileAttributes = null);
 
         /// <summary>
         /// Asynchronously performs a <c>SSH_FXP_OPEN</c> request.

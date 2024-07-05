@@ -14,7 +14,7 @@ using Renci.SshNet.Sftp.Responses;
 namespace Renci.SshNet.Tests.Classes.Sftp
 {
     [TestClass]
-    public class SftpFileStreamTest_Write_SessionOpen_CountGreatherThanTwoTimesTheWriteBufferSize : SftpFileStreamTestBase
+    public class SftpFileStreamTest_Write_SessionOpen_CountGreaterThanTwoTimesTheWriteBufferSize : SftpFileStreamTestBase
     {
         private SftpFileStream _target;
         private string _path;
@@ -57,7 +57,7 @@ namespace Renci.SshNet.Tests.Classes.Sftp
         protected override void SetupMocks()
         {
             SftpSessionMock.InSequence(MockSequence)
-                           .Setup(p => p.RequestOpen(_path, Flags.Write | Flags.Truncate, true))
+                           .Setup(p => p.RequestOpen(_path, Flags.Write | Flags.Truncate, true, null))
                            .Returns(_handle);
             SftpSessionMock.InSequence(MockSequence)
                            .Setup(p => p.CalculateOptimalReadLength(_bufferSize))

@@ -992,6 +992,41 @@ namespace Renci.SshNet
         }
 
         /// <summary>
+        /// Uploads stream into remote file.
+        /// </summary>
+        /// <param name="input">Data input stream.</param>
+        /// <param name="path">Remote file path.</param>
+        /// <param name="canOverride">if set to <see langword="true"/> then existing file will be overwritten.</param>
+        /// <param name="sftpFileAttributes">Use to set file attributes on upload.</param>
+        /// <param name="uploadCallback">The upload callback.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="input" /> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="path" /> is <see langword="null"/> or contains only whitespace characters.</exception>
+        /// <exception cref="SshConnectionException">Client is not connected.</exception>
+        /// <exception cref="SftpPermissionDeniedException">Permission to upload the file was denied by the remote host. <para>-or-</para> A SSH command was denied by the server.</exception>
+        /// <exception cref="SshException">A SSH error where <see cref="Exception.Message" /> is the message from the remote host.</exception>
+        /// <exception cref="ObjectDisposedException">The method was called after the client was disposed.</exception>
+        /// <remarks>
+        /// Method calls made by this method to <paramref name="input" />, may under certain conditions result in exceptions thrown by the stream.
+        /// </remarks>
+        public void UploadFile(Stream input, string path, bool canOverride, SftpFileAttributes sftpFileAttributes, Action<ulong>? uploadCallback = null)
+        {
+            CheckDisposed();
+
+            var flags = Flags.Write | Flags.Truncate;
+
+            if (canOverride)
+            {
+                flags |= Flags.CreateNewOrOpen;
+            }
+            else
+            {
+                flags |= Flags.CreateNew;
+            }
+
+            InternalUploadFile(input, path, flags, asyncResult: null, uploadCallback);
+        }
+
+        /// <summary>
         /// Begins an asynchronous uploading the stream into remote file.
         /// </summary>
         /// <param name="input">Data input stream.</param>
@@ -2408,10 +2443,11 @@ namespace Renci.SshNet
         /// <param name="flags">The flags.</param>
         /// <param name="asyncResult">An <see cref="IAsyncResult"/> that references the asynchronous request.</param>
         /// <param name="uploadCallback">The upload callback.</param>
+        /// <param name="sftpFileAttributes">The file attributes to set on upload.</param>
         /// <exception cref="ArgumentNullException"><paramref name="input" /> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="path" /> is <see langword="null"/> or contains whitespace.</exception>
         /// <exception cref="SshConnectionException">Client not connected.</exception>
-        private void InternalUploadFile(Stream input, string path, Flags flags, SftpUploadAsyncResult? asyncResult, Action<ulong>? uploadCallback)
+        private void InternalUploadFile(Stream input, string path, Flags flags, SftpUploadAsyncResult? asyncResult, Action<ulong>? uploadCallback, SftpFileAttributes? sftpFileAttributes = null)
         {
             if (input is null)
             {
@@ -2430,7 +2466,7 @@ namespace Renci.SshNet
 
             var fullPath = _sftpSession.GetCanonicalPath(path);
 
-            var handle = _sftpSession.RequestOpen(fullPath, flags);
+            var handle = _sftpSession.RequestOpen(fullPath, flags, nullOnError: false, sftpFileAttributes);
 
             ulong offset = 0;
 
