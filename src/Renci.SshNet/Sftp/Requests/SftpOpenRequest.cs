@@ -51,6 +51,11 @@ namespace Renci.SshNet.Sftp.Requests
             }
         }
 
+        public SftpOpenRequest(uint protocolVersion, uint requestId, string fileName, Encoding encoding, Flags flags, Action<SftpHandleResponse> handleAction, Action<SftpStatusResponse> statusAction, SftpFileAttributes sftpFileAttributes)
+            : this(protocolVersion, requestId, fileName, encoding, flags, sftpFileAttributes, handleAction, statusAction)
+        {
+        }
+
         public SftpOpenRequest(uint protocolVersion, uint requestId, string fileName, Encoding encoding, Flags flags, Action<SftpHandleResponse> handleAction, Action<SftpStatusResponse> statusAction)
             : this(protocolVersion, requestId, fileName, encoding, flags, SftpFileAttributes.Empty, handleAction, statusAction)
         {

@@ -40,7 +40,7 @@ namespace Renci.SshNet.Tests.Classes.Sftp
         protected override void SetupMocks()
         {
             SftpSessionMock.InSequence(MockSequence)
-                           .Setup(p => p.RequestOpen(_path, Flags.Write | Flags.Truncate, true))
+                           .Setup(p => p.RequestOpen(_path, Flags.Write | Flags.Truncate, true, null))
                            .Returns(_handle);
             SftpSessionMock.InSequence(MockSequence)
                            .Setup(p => p.CalculateOptimalReadLength((uint)_bufferSize))
@@ -152,7 +152,7 @@ namespace Renci.SshNet.Tests.Classes.Sftp
         [TestMethod]
         public void RequestOpenOnSftpSessionShouldBeInvokedOnce()
         {
-            SftpSessionMock.Verify(p => p.RequestOpen(_path, Flags.Write | Flags.Truncate, true), Times.Once);
+            SftpSessionMock.Verify(p => p.RequestOpen(_path, Flags.Write | Flags.Truncate, true, null), Times.Once);
         }
     }
 }

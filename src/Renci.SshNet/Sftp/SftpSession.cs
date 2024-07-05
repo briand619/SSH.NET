@@ -458,8 +458,9 @@ namespace Renci.SshNet.Sftp
         /// <param name="path">The path.</param>
         /// <param name="flags">The flags.</param>
         /// <param name="nullOnError">If set to <see langword="true"/> returns <see langword="null"/> instead of throwing an exception.</param>
+        /// <param name="sftpFileAttributes">If set, file attributes to set on file open.</param>
         /// <returns>File handle.</returns>
-        public byte[] RequestOpen(string path, Flags flags, bool nullOnError = false)
+        public byte[] RequestOpen(string path, Flags flags, bool nullOnError = false, SftpFileAttributes sftpFileAttributes = null)
         {
             byte[] handle = null;
             SshException exception = null;
@@ -480,7 +481,8 @@ namespace Renci.SshNet.Sftp
                                                   {
                                                       exception = GetSftpException(response);
                                                       _ = wait.Set();
-                                                  });
+                                                  },
+                                                  sftpFileAttributes);
 
                 SendRequest(request);
 

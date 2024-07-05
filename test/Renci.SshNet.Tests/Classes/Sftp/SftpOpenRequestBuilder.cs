@@ -14,6 +14,7 @@ namespace Renci.SshNet.Tests.Classes.Sftp
         private string _fileName;
         private Encoding _encoding;
         private Flags _flags;
+        private SftpFileAttributes _sftpFileAttributes;
         private Action<SftpHandleResponse> _handleAction;
         private Action<SftpStatusResponse> _statusAction;
 
@@ -47,6 +48,12 @@ namespace Renci.SshNet.Tests.Classes.Sftp
             return this;
         }
 
+        public SftpOpenRequestBuilder WithSftpFileAttributes(SftpFileAttributes sftpFileAttributes)
+        {
+            _sftpFileAttributes = sftpFileAttributes;
+            return this;
+        }
+
         public SftpOpenRequestBuilder WithDataAction(Action<SftpHandleResponse> handleAction)
         {
             _handleAction = handleAction;
@@ -64,7 +71,7 @@ namespace Renci.SshNet.Tests.Classes.Sftp
             var handleAction = _handleAction ?? ((handleResponse) => { });
             var statusAction = _statusAction ?? ((statusResponse) => { });
 
-            return new SftpOpenRequest(_protocolVersion, _requestId, _fileName, _encoding, _flags, handleAction, statusAction);
+            return new SftpOpenRequest(_protocolVersion, _requestId, _fileName, _encoding, _flags, handleAction, statusAction, _sftpFileAttributes);
         }
     }
 }
