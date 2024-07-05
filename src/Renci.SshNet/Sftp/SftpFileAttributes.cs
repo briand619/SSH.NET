@@ -451,7 +451,10 @@ namespace Renci.SshNet.Sftp
             }
         }
 
-        private SftpFileAttributes()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SftpFileAttributes"/> class.
+        /// </summary>
+        public SftpFileAttributes()
         {
         }
 

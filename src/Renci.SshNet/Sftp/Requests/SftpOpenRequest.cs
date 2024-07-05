@@ -67,7 +67,7 @@ namespace Renci.SshNet.Sftp.Requests
             Encoding = encoding;
             Filename = fileName;
             Flags = flags;
-            Attributes = attributes;
+            Attributes = attributes ?? SftpFileAttributes.Empty;
 
             _handleAction = handleAction;
         }

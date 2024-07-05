@@ -1023,7 +1023,7 @@ namespace Renci.SshNet
                 flags |= Flags.CreateNew;
             }
 
-            InternalUploadFile(input, path, flags, asyncResult: null, uploadCallback);
+            InternalUploadFile(input, path, flags, asyncResult: null, uploadCallback, sftpFileAttributes);
         }
 
         /// <summary>
@@ -2466,7 +2466,13 @@ namespace Renci.SshNet
 
             var fullPath = _sftpSession.GetCanonicalPath(path);
 
-            var handle = _sftpSession.RequestOpen(fullPath, flags, nullOnError: false, sftpFileAttributes);
+            if (sftpFileAttributes is not null && sftpFileAttributes != SftpFileAttributes.Empty && (flags & Flags.CreateNewOrOpen) == Flags.CreateNewOrOpen && Exists(path))
+            {
+                // Ensure the file does not exist
+                DeleteFile(path);
+            }
+
+            var handle = _sftpSession.RequestOpen(fullPath, flags, nullOnError: false, sftpFileAttributes ?? SftpFileAttributes.Empty);
 
             ulong offset = 0;
 
